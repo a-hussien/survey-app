@@ -2,37 +2,58 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Http\JsonResponse;
 
 class AuthenticatedSessionController extends Controller
 {
+    use ApiResponses;
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): Response
+    public function store(LoginRequest $request): JsonResponse
     {
-        $request->authenticate();
 
-        $request->session()->regenerate();
+        $credentials = $request->credentials();
 
-        return response()->noContent();
+        $credentials['isActive'] = 1;
+        $remember = $credentials['remember'] ?? false;
+        unset($credentials['remember']);
+
+        // check credentials
+        if(!Auth::attempt($credentials, $remember))
+        {
+            return $this->error('', 'Wrong authentication data', 401);
+        }
+
+        $user = Auth::user();
+
+        $token = $user->createToken('_token')->plainTextToken;
+
+        return $this->success([
+            'user' => new UserResource($user),
+            'token' => $token,
+        ], 'User Logged In Successfully');
+
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): Response
+    public function destroy(Request $request): JsonResponse
     {
-        Auth::guard('web')->logout();
+        if(Auth::check())
+        {
+            //delete current token
+            Auth::user()->currentAccessToken()->delete();
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return response()->noContent();
+            // response
+            return $this->success('', 'User Logged out successfully');
+        }
     }
 }
