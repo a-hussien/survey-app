@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom"
 import Logo from '../assets/logo.svg'
-import { UserStateContext } from "../Contexts/ContextProvider"
+import { useStateContext } from "../Contexts/ContextProvider"
 
 const GuestLayout = () => {
 
-    const { token } = UserStateContext()
+    const { token } = useStateContext()
 
     if(token)
     {

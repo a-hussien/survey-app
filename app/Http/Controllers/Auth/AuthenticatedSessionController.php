@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
         // check credentials
         if(!Auth::attempt($credentials, $remember))
         {
-            return $this->error('', 'Wrong authentication data', 401);
+            return $this->error('', __('auth.failed') , 401);
         }
 
         $user = Auth::user();

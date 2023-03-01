@@ -50,6 +50,7 @@ class LoginRequest extends FormRequest
             'required_without:email|string|min:4|exists:users,username',
 
             'password' => 'required|string|min:8',
+            'remember' => 'boolean',
         ];
     }
 

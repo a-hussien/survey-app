@@ -1,6 +1,38 @@
 import { HiLockClosed } from 'react-icons/hi'
+import { useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import axiosClient from '../api/axios'
+import { useStateContext } from '../Contexts/ContextProvider'
 
 const Signup = () => {
+
+    const { setUser, setUserToken } = useStateContext()
+
+    const { register, handleSubmit } = useForm()
+
+    const [error, setError] = useState({__html: ''})
+
+    const onSave = ({...data}) => {
+
+        setError({__html: ''})
+        // handle incoming request via axios
+        axiosClient.post('/register', {...data})
+        .then(({data}) => {
+            setUser(data?.data?.user)
+            setUserToken(data?.data?.token)
+        })
+        .catch((error) => {
+            if(error.response){
+                const responseErrors = Object.values(error.response.data.errors).reduce(
+                    (accum, next) => [...accum, ...next], [])
+
+                setError({__html: responseErrors.join('<br />')})
+            }
+            console.error(error)
+        })
+
+    }
 
   return (
     <div>
@@ -8,14 +40,54 @@ const Signup = () => {
                 Sign up <span className='text-lg text-indigo-500'>It's Free !</span>
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-            Create free account
-            </a>
+            Or if you already have an account
+            <Link to="/signin" className="ml-2 font-medium text-indigo-600 hover:text-indigo-500">
+                Signin
+            </Link>
         </p>
-        <form className="mt-8 space-y-6" action="#" method="POST">
-            <input type="hidden" name="remember" defaultValue="true" />
+
+        {
+            error.__html && (
+                <div className='bg-red-400 py-3 px-4 mt-4 text-white rounded-md' dangerouslySetInnerHTML={error}></div>
+            )
+        }
+
+        <form
+        onSubmit={handleSubmit(onSave)}
+        className="mt-8 space-y-6"
+        method="POST"
+        >
             <div className="-space-y-px rounded-md shadow-sm">
+                <div>
+                    <label htmlFor="full-name" className="sr-only">
+                        Full Name
+                    </label>
+                    <input
+                        id="full-name"
+                        name="name"
+                        type="text"
+                        autoComplete="name"
+                        required
+                        className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                        placeholder="Full Name"
+                        {...register("name")}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="user-name" className="sr-only">
+                        User Name
+                    </label>
+                    <input
+                        id="user-name"
+                        name="username"
+                        type="text"
+                        autoComplete="username"
+                        required
+                        className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                        placeholder="User Name"
+                        {...register("username")}
+                    />
+                </div>
                 <div>
                     <label htmlFor="email-address" className="sr-only">
                         Email address
@@ -26,8 +98,9 @@ const Signup = () => {
                         type="email"
                         autoComplete="email"
                         required
-                        className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                        className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         placeholder="Email address"
+                        {...register("email")}
                     />
                 </div>
                 <div>
@@ -40,29 +113,24 @@ const Signup = () => {
                         type="password"
                         autoComplete="current-password"
                         required
-                        className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                        className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         placeholder="Password"
+                        {...register("password")}
                     />
                 </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                    <input
-                        id="remember-me"
-                        name="remember-me"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                        Remember me
+                <div>
+                    <label htmlFor="password-confirmation" className="sr-only">
+                        Confirm Password
                     </label>
-                </div>
-
-                <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                    Forgot your password?
-                </a>
+                    <input
+                        id="password-confirmation"
+                        name="password_confirmation"
+                        type="password"
+                        required
+                        className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                        placeholder="Password Confirmation"
+                        {...register("password_confirmation")}
+                    />
                 </div>
             </div>
 
@@ -74,7 +142,7 @@ const Signup = () => {
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                     <HiLockClosed className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
                 </span>
-                Sign in
+                    Sign up
                 </button>
             </div>
         </form>

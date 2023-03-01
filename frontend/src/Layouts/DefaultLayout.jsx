@@ -3,7 +3,8 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { HiBars3, HiUserCircle, HiXMark } from 'react-icons/hi2'
 import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
-import { UserStateContext } from '../Contexts/ContextProvider'
+import { useStateContext } from '../Contexts/ContextProvider'
+import axiosClient from '../api/axios'
 
 const navigation = [
   { name: 'Dashboard', to: '/' },
@@ -16,7 +17,7 @@ function classNames(...classes) {
 
 const DefaultLayout = () => {
 
-    const { user, token } = UserStateContext()
+    const { user, token, setUser, setUserToken } = useStateContext()
 
     if(!token)
     {
@@ -25,7 +26,10 @@ const DefaultLayout = () => {
 
     const Logout = (e) => {
         e.preventDefault()
-        console.log('Logged Out')
+        axiosClient.post('/logout').then( res => {
+            setUser({})
+            setUserToken('')
+        })
     }
 
   return (
@@ -79,8 +83,8 @@ const DefaultLayout = () => {
                             <HiUserCircle className="h-8 w-8 text-white rounded-full" />
                         </Menu.Button>
                         <div className="flex flex-col justify-center items-center text-sm">
-                            <span className='block text-white font-medium'>{user.name}</span>
-                            <span className='-mt-[0.3rem] text-white/50 font-thin'>{user.email}</span>
+                            <span className='block text-white font-medium'>{user?.attributes?.name}</span>
+                            <span className='-mt-[0.3rem] text-white/50 font-thin'>{user?.attributes?.email}</span>
                         </div>
                     </div>
                     <Transition
@@ -93,9 +97,6 @@ const DefaultLayout = () => {
                         leaveTo="transform opacity-0 scale-95"
                     >
                         <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-
-
-
                             <Menu.Item>
                                 <a
                                 href="#"
@@ -105,7 +106,6 @@ const DefaultLayout = () => {
                                 Sign Out
                                 </a>
                             </Menu.Item>
-
                         </Menu.Items>
                     </Transition>
                     </Menu>
@@ -146,8 +146,8 @@ const DefaultLayout = () => {
                     <HiUserCircle className="h-10 w-10 text-white rounded-full" />
                 </div>
                 <div className="ml-3">
-                    <div className="text-base font-medium leading-none text-white">{user.name}</div>
-                    <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
+                    <div className="text-base font-medium leading-none text-white">{user?.attributes?.name}</div>
+                    <div className="text-sm font-medium leading-none text-gray-400">{user?.attributes?.email}</div>
                 </div>
                 <button
                     type="button"

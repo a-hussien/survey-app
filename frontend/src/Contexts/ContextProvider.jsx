@@ -8,23 +8,27 @@ const StateContext = createContext({
 })
 
 export const ContextProvider = ({ children }) => {
-    const [user, setUser] = useState({
-        name: 'Ahmed Hussein',
-        email: 'test@test.com',
-    })
+    const [user, setUser] = useState({})
+    const [token, setToken] = useState(localStorage.getItem('_token') || '')
 
-    const [token, setToken] = useState(null)
+    const setUserToken = (_token) => {
+        _token ?
+        localStorage.setItem('_token', _token):
+        localStorage.removeItem('_token')
+
+        setToken(_token)
+    }
 
     return (
         <StateContext.Provider value={{
             user,
             token,
             setUser,
-            setToken
+            setUserToken
         }} >
             { children }
         </StateContext.Provider>
     )
 }
 
-export const UserStateContext = () => useContext(StateContext)
+export const useStateContext = () => useContext(StateContext)
