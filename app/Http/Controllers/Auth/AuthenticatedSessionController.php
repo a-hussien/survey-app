@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class AuthenticatedSessionController extends Controller
 {
-    use ApiResponses;
     /**
      * Handle an incoming authentication request.
      */
@@ -28,24 +27,26 @@ class AuthenticatedSessionController extends Controller
         // check credentials
         if(!Auth::attempt($credentials, $remember))
         {
-            return $this->error('', __('auth.failed') , 401);
+            return response()->json([
+                'error' => __('auth.failed'),
+            ], 401);
         }
 
         $user = Auth::user();
 
         $token = $user->createToken('_token')->plainTextToken;
 
-        return $this->success([
+        return response()->json([
             'user' => new UserResource($user),
             'token' => $token,
-        ], 'User Logged In Successfully');
+        ]);
 
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): JsonResponse
+    public function destroy(Request $request): Response
     {
         if(Auth::check())
         {
@@ -53,7 +54,7 @@ class AuthenticatedSessionController extends Controller
             Auth::user()->currentAccessToken()->delete();
 
             // response
-            return $this->success('', 'User Logged out successfully');
+            return response()->noContent();
         }
     }
 }
