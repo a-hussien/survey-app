@@ -3,18 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
-use App\Traits\ApiResponses;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-// use Illuminate\Auth\Events\Registered;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
-// use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\Auth\SignupRequest;
+// use Illuminate\Auth\Events\Registered;
 
 class RegisteredUserController extends Controller
 {
-    use ApiResponses;
     /**
      * Handle an incoming registration request.
      *
@@ -35,9 +32,9 @@ class RegisteredUserController extends Controller
 
         $token = $user->createToken('_token')->plainTextToken;
 
-        return $this->success([
+        return response()->json([
             'user' => new UserResource($user),
             'token' => $token,
-        ], 'User Created Successfully');
+        ]);
     }
 }

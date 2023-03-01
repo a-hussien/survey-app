@@ -4,7 +4,7 @@ import { useStateContext } from '../Contexts/ContextProvider'
 
 const DefaultLayout = () => {
 
-    const { authUser, token } = useStateContext()
+    const { token } = useStateContext()
 
     if(!token)
     {
@@ -13,7 +13,7 @@ const DefaultLayout = () => {
 
   return (
     <div className="min-h-full">
-        <NavBar user={authUser} />
+        <NavBar />
         <Outlet />
     </div>
   )

@@ -15,9 +15,9 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-const NavBar = ({user}) => {
+const NavBar = () => {
 
-    const { setAuthUser, setUserToken } = useStateContext()
+    const { authUser, setAuthUser, setUserToken } = useStateContext()
 
     const Logout = (e) => {
         e.preventDefault()
@@ -73,8 +73,8 @@ const NavBar = ({user}) => {
                             <HiUserCircle className="h-8 w-8 text-white rounded-full" />
                         </Menu.Button>
                         <div className="flex flex-col justify-center items-center text-sm">
-                            <span className='block text-white font-medium'>{user?.attributes?.name}</span>
-                            <span className='-mt-[0.3rem] text-white/50 font-thin'>{user?.attributes?.email}</span>
+                            <span className='block text-white font-medium'>{authUser?.name}</span>
+                            <span className='-mt-[0.3rem] text-white/50 font-thin'>{authUser?.email}</span>
                         </div>
                     </div>
                     <Transition
@@ -136,8 +136,8 @@ const NavBar = ({user}) => {
                     <HiUserCircle className="h-10 w-10 text-white rounded-full" />
                 </div>
                 <div className="ml-3">
-                    <div className="text-base font-medium leading-none text-white">{user?.attributes?.name}</div>
-                    <div className="text-sm font-medium leading-none text-gray-400">{user?.attributes?.email}</div>
+                    <div className="text-base font-medium leading-none text-white">{authUser?.name}</div>
+                    <div className="text-sm font-medium leading-none text-gray-400">{authUser?.email}</div>
                 </div>
                 <button
                     type="button"

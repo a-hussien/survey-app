@@ -7,9 +7,9 @@ import { useStateContext } from '../Contexts/ContextProvider'
 
 const Signup = () => {
 
-    const { setUser, setUserToken } = useStateContext()
-
     const { register, handleSubmit } = useForm()
+
+    const { setAuthUser, setUserToken } = useStateContext()
 
     const [error, setError] = useState({__html: ''})
 
@@ -19,8 +19,8 @@ const Signup = () => {
         // handle incoming request via axios
         axiosClient.post('/register', {...data})
         .then(({data}) => {
-            setUser(data?.data?.user)
-            setUserToken(data?.data?.token)
+            setAuthUser(data?.user.attributes)
+            setUserToken(data?.token)
         })
         .catch((error) => {
             if(error.response){

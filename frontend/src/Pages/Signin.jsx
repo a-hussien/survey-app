@@ -16,11 +16,11 @@ const Signin = () => {
 
         axiosClient.post('/login', {...data})
         .then(({response, data}) => {
-            if(response?.status === 401){
+            if(response?.status === 401) {
                 setError({__html: response.data.error})
             }
 
-            setAuthUser(data?.user)
+            setAuthUser(data?.user.attributes)
             setUserToken(data?.token)
         })
         .catch((error) => {
