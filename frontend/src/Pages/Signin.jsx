@@ -7,7 +7,7 @@ import { useStateContext } from '../Contexts/ContextProvider'
 
 const Signin = () => {
 
-    const { setUser, setUserToken } = useStateContext()
+    const { setAuthUser, setUserToken } = useStateContext()
     const { register, handleSubmit } = useForm()
     const [error, setError] = useState({__html: ''})
 
@@ -15,9 +15,13 @@ const Signin = () => {
         setError({__html: ''})
 
         axiosClient.post('/login', {...data})
-        .then(({data}) => {
-            setUser(data?.data?.user)
-            setUserToken(data?.data?.token)
+        .then(({response, data}) => {
+            if(response?.status === 401){
+                setError({__html: response.data.error})
+            }
+
+            setAuthUser(data?.user)
+            setUserToken(data?.token)
         })
         .catch((error) => {
             if(error.response){
@@ -26,7 +30,6 @@ const Signin = () => {
 
                 setError({__html: responseErrors.join('<br />')})
             }
-            console.error(error)
         })
 
     }
