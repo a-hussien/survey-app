@@ -19,7 +19,7 @@ const Signup = () => {
         // handle incoming request via axios
         axiosClient.post('/register', {...data})
         .then(({data}) => {
-            setAuthUser(data?.user.attributes)
+            setAuthUser(data?.user?.attributes)
             setUserToken(data?.token)
         })
         .catch((error) => {
@@ -29,9 +29,7 @@ const Signup = () => {
 
                 setError({__html: responseErrors.join('<br />')})
             }
-            console.error(error)
         })
-
     }
 
   return (

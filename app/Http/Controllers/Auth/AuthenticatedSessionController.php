@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +16,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): JsonResponse
     {
-
         $credentials = $request->credentials();
 
         $credentials['isActive'] = 1;
@@ -40,21 +38,34 @@ class AuthenticatedSessionController extends Controller
             'user' => new UserResource($user),
             'token' => $token,
         ]);
-
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): Response
+    public function destroy(): Response
     {
         if(Auth::check())
         {
             //delete current token
             Auth::user()->currentAccessToken()->delete();
-
             // response
             return response()->noContent();
         }
     }
+
+    /**
+     * get current user informations.
+     */
+    public function getCurrentUser(): JsonResponse
+    {
+        if(Auth::check())
+        {
+            $user = Auth::user();
+            return response()->json([
+                'user' => new UserResource($user),
+            ]);
+        }
+    }
+
 }

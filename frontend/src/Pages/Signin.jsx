@@ -20,7 +20,7 @@ const Signin = () => {
                 setError({__html: response.data.error})
             }
 
-            setAuthUser(data?.user.attributes)
+            setAuthUser(data?.user?.attributes)
             setUserToken(data?.token)
         })
         .catch((error) => {
@@ -31,8 +31,8 @@ const Signin = () => {
                 setError({__html: responseErrors.join('<br />')})
             }
         })
-
     }
+
   return (
     <div>
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">

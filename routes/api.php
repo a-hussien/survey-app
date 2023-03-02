@@ -15,6 +15,10 @@ Route::prefix('v1')->group(function() {
     ->name('login');
 
     Route::middleware(['auth:sanctum'])->group( function () {
+
+        Route::get('/user', [AuthenticatedSessionController::class, 'getCurrentUser'])
+        ->name('user');
+
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
     });

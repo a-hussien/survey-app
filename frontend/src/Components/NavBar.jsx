@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { HiBars3, HiUserCircle, HiXMark } from 'react-icons/hi2'
 import { NavLink } from 'react-router-dom'
@@ -18,6 +18,12 @@ function classNames(...classes) {
 const NavBar = () => {
 
     const { authUser, setAuthUser, setUserToken } = useStateContext()
+
+    useEffect(() => {
+        axiosClient.get('/user').then(({data}) => {
+            setAuthUser(data?.user?.attributes)
+        })
+    }, [])
 
     const Logout = (e) => {
         e.preventDefault()
