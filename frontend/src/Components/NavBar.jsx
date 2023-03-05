@@ -8,6 +8,7 @@ import LogoImg from './LogoImg'
 
 const navigation = [
     { name: 'Dashboard', to: '/' },
+    { name: 'Users', to: '/users' },
     { name: 'Surveys', to: '/surveys' },
 ]
 
