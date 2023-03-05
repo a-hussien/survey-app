@@ -23,9 +23,9 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:120',
-            'username' => 'required|string|max:120|unique:users,username,'. $this->id,
-            'email' => 'required|email|max:255|unique:users,email,'. $this->id,
+            'name' => "required|string|max:120",
+            'username' => "required|string|max:120|unique:users,username,{$this->id}",
+            'email' => "required|email|max:255|unique:users,email,{$this->id}",
             'password' => ['confirmed', 'min:8', Password::defaults()],
         ];
     }
