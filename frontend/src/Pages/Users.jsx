@@ -2,8 +2,10 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import axiosClient from "../api/axios"
 import PageComponent from "../Components/PageComponent"
-import { AiOutlineUserAdd } from "react-icons/ai";
-import Loading from "../Components/Loading";
+import { AiOutlineUserAdd } from "react-icons/ai"
+import Loading from "../Components/Loading"
+import toast from "react-hot-toast"
+import { Confirm } from "notiflix/build/notiflix-confirm-aio"
 
 const Users = () => {
     const [users, setUsers] = useState([])
@@ -26,17 +28,31 @@ const Users = () => {
         })
     }
 
+
     const RemoveUser = (e, user) => {
         e.preventDefault()
-        if(!window.confirm('Are you sure?')) {
-            return
-        }
-
-        axiosClient.delete(`/users/${user.attributes.uuid}`)
-        .then(() => {
-            console.log('deleted')
-            fetchAllUsers()
-        })
+        Confirm.show(
+            'Delete user confirmation',
+            `Are you sure you want to delete user <b>${user.attributes.name}</b>?`,
+            'Yes',
+            'No',
+            () => {
+                axiosClient.delete(`/users/${user.attributes.uuid}`)
+                .then(() => {
+                    toast.success('User deleted')
+                    fetchAllUsers()
+                })
+            },
+            () => {
+                return
+            },
+            {
+                titleColor: '#eb4d4b',
+                okButtonBackground: '#ff7675',
+                cssAnimationStyle: 'zoom',
+                plainText: false,
+            }
+        )
     }
 
   return (

@@ -65,10 +65,6 @@ class UserController extends Controller
 
         $user->update($validated_data);
 
-
-
-
-
         return response()->json([
             'user' => new UserResource($user),
         ]);
