@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import NavBar from '../Components/NavBar'
 import { useStateContext } from '../Contexts/ContextProvider'
+import { Toaster } from 'react-hot-toast'
 
 const DefaultLayout = () => {
 
@@ -14,6 +15,7 @@ const DefaultLayout = () => {
   return (
     <div className="min-h-full">
         <NavBar />
+        <Toaster />
         <Outlet />
     </div>
   )

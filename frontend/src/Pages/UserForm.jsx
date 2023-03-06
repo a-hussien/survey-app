@@ -3,7 +3,8 @@ import { useNavigate, useParams } from "react-router-dom"
 import axiosClient from "../api/axios"
 import PageComponent from "../Components/PageComponent"
 import { AiOutlineUserAdd, AiOutlineUserSwitch } from "react-icons/ai"
-import Loading from "../Components/Loading"
+import toast from "react-hot-toast"
+import { Block } from "notiflix/build/notiflix-block-aio"
 
 const UserForm = () => {
 
@@ -18,13 +19,12 @@ const UserForm = () => {
         password_confirmation: ''
     })
 
-    const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState({__html: ''})
     const [title, setTitle] = useState('Create New User')
 
     if(uuid) {
         useEffect(() => {
-            setIsLoading(true)
+            Block.circle('.user__form')
             getUser()
         }, [])
     }
@@ -32,12 +32,12 @@ const UserForm = () => {
     const getUser = async () => {
         await axiosClient.get(`/users/${uuid}`)
         .then(({data}) => {
-            setIsLoading(false)
+            Block.remove('.user__form')
             setUser(data?.user?.attributes)
             setTitle(`Update: ${data?.user?.attributes.name}`)
         })
         .catch(() => {
-            setIsLoading(false)
+            Block.remove('.user__form')
         })
     }
 
@@ -46,8 +46,10 @@ const UserForm = () => {
         setError({__html: ''})
 
         if(user?.uuid) {
+            // update user
             axiosClient.patch(`/users/${user?.uuid}`, user)
             .then(() => {
+                toast.success('User updated')
                 navigate('/users')
             })
             .catch((error) => {
@@ -58,8 +60,10 @@ const UserForm = () => {
                 }
             })
         }else {
+            // create user
             axiosClient.post('/users', user)
             .then(() => {
+                toast.success('User created')
                 navigate('/users')
             })
             .catch((error) => {
@@ -75,14 +79,12 @@ const UserForm = () => {
   return (
     <PageComponent title={title}>
         <div className="flex items-center justify-center gap-12">
-        {
-            isLoading ? (<Loading />):(
             <form
             onSubmit={handleSubmit}
             className="w-1/2 mt-8 space-y-6"
             method="POST"
             >
-                <div className="-space-y-px rounded-md shadow-sm">
+                <div className="user__form -space-y-px rounded-md shadow-sm">
                     <div>
                         <label htmlFor="full-name" className="sr-only">
                             Full Name
@@ -173,8 +175,6 @@ const UserForm = () => {
                     </button>
                 </div>
             </form>
-            )
-        }
 
             <div className="w-1/2 flex">
                 {
@@ -183,7 +183,6 @@ const UserForm = () => {
                     )
                 }
             </div>
-
         </div>
     </PageComponent>
   )
