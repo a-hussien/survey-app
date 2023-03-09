@@ -16,6 +16,13 @@ class User extends Authenticatable
     {
         return 'uuid';
     }
+
+
+    /* TODO:
+        Search Scope
+        Enum Class for IsActive attribute
+    */
+
     /**
      * The attributes that are mass assignable.
      *

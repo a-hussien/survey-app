@@ -15,11 +15,24 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class UserController extends Controller
 {
     /**
+     * UsersController constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(public User $user)
+    {
+    }
+
+    /**
      * Display a listing of the resource.
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        return UserResource::collection(User::query()->orderBy('id', 'desc')->paginate(10));
+        return UserResource::collection(
+            $this->user->query()
+            ->where('name', 'like', '%'.$request->input('search').'%')
+            ->orderBy($request->sort_field, $request->sort_order)
+            ->paginate((int)$request->per_page));
     }
 
     /**
@@ -30,7 +43,7 @@ class UserController extends Controller
         $validated_data = $request->validated();
         $validated_data['password'] = Hash::make($validated_data['password']);
 
-        $user = User::create($validated_data);
+        $user = $this->user->create($validated_data);
 
         return response()->json([
             'user' => new UserResource($user),
