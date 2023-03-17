@@ -5,7 +5,7 @@ import axiosClient from "../../api/axios"
 import { Block } from "notiflix/build/notiflix-block-aio"
 import { FcAlphabeticalSortingAz, FcAlphabeticalSortingZa } from "react-icons/fc"
 import { AiOutlineSearch } from "react-icons/ai"
-import Actions from "./Actions"
+import TableRows from "./TableRows"
 
 const SORT_ASC = "ASC"
 const SORT_DESC = "DESC"
@@ -87,10 +87,10 @@ const DataTable = ({...props}) => {
             <div className="flex items-center justify-center gap-x-2">
                 <label className="text-slate-600 text-sm">Pages</label>
                 <select className="rounded-lg border-none cursor-pointer" value={perPage} onChange={(e) => handlePerPage(e.target.value)}>
-                    <option value="5">5</option>
                     <option value="10">10</option>
-                    <option value="20">20</option>
+                    <option value="25">25</option>
                     <option value="50">50</option>
+                    <option value="100">100</option>
                 </select>
             </div>
         </div>
@@ -122,42 +122,19 @@ const DataTable = ({...props}) => {
                                     </thead>
 
                                     <tbody className="text-gray-600 text-sm font-light">
-                                    {
-                                        data?.length > 0 ?
-                                        data?.map((dt, i) => (
-                                            <tr key={i+1} className="border-b border-gray-200 hover:bg-gray-100">
-                                                <td className="py-3 px-6 text-left whitespace-nowrap">
-                                                    <span className="font-medium">{i+1}</span>
-                                                </td>
-                                                <td className="py-3 px-6 text-left">
-                                                    <span className="font-medium">{dt.attributes.name}</span>
-                                                </td>
-                                                <td className="py-3 px-6">
-                                                    <span className="font-medium">{dt.attributes.email}</span>
-                                                </td>
-                                                <td className="py-3 px-6">
-                                                    <span className="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">Active</span>
-                                                </td>
-                                                <td className="py-3 px-6 text-center">
-                                                <div className="flex item-center justify-center">
-                                                    {actions && (<Actions data={dt.attributes} actions={actions} url={fetchUrl} refetchData={() => fetchData()} />)}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        ))
-                                        :
-                                        (
-                                            <tr className="h-16 text-lg font-medium text-center text-slate-100 bg-slate-500 drop-shadow-lg">
-                                                <td colSpan={columns.length}>No Items Found.</td>
-                                            </tr>
-                                        )
-                                    }
+                                        <TableRows
+                                        fetchUrl={fetchUrl}
+                                        data={data}
+                                        columns={columns}
+                                        actions={actions}
+                                        refetchData={() => fetchData()}
+                                        />
                                     </tbody>
 
                                 </table>
                             </div>
                             {
-                                data.length > 0 &&
+                                data?.length > 0 &&
                                 (<Paginator pagination={pagination} pageChanged={(page) => setCurrentPage(page)} />)
                             }
                         </div>
