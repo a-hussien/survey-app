@@ -31,7 +31,7 @@ class UserController extends Controller
         return UserResource::collection(
             $this->user->search($request->query('search', ''))
             ->orderBy($request->sort_field, $request->sort_order)
-            ->paginate((int)$request->per_page));
+            ->paginate((int) $request->query('per_page')));
     }
 
     /**

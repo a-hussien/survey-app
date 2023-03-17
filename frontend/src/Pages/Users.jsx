@@ -12,25 +12,34 @@ const Users = () => {
         header: '#',
         key: 'id',
         sortable: false,
+        hasData: false,
     },
     {
         header: 'Name',
         key: 'name',
         sortable: true,
+        hasData: true,
     },
     {
         header: 'Email',
         key: 'email',
         sortable: true,
+        hasData: true,
+    },
+    {
+        header: 'Created Date',
+        key: 'created_at',
+        sortable: true,
+        hasData: true,
     },
     {
         header: 'Status',
         key: 'isActive',
         sortable: false,
+        hasData: false,
     },
     {
         header: 'Actions',
-        sortable: false,
     },
    ]
 
