@@ -29,8 +29,7 @@ class UserController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         return UserResource::collection(
-            $this->user->query()
-            ->where('name', 'like', '%'.$request->input('search').'%')
+            $this->user->search($request->query('search', ''))
             ->orderBy($request->sort_field, $request->sort_order)
             ->paginate((int)$request->per_page));
     }
