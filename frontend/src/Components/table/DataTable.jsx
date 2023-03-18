@@ -66,10 +66,15 @@ const DataTable = ({...props}) => {
             per_page: perPage,
             page: currentPage,
         }
-        const { data } = await axiosClient.get(fetchUrl, { params })
+
+        await axiosClient.get(fetchUrl, { params })
+        .then(({data}) => {
             setData(data.data)
             setPagination(data.meta)
+        })
+        .finally(() => {
             Block.remove('.data__table')
+        })
     }
 
   return (
@@ -96,50 +101,62 @@ const DataTable = ({...props}) => {
         </div>
 
         <div className="overflow-x-auto data__table">
-                    <div className="flex items-center font-sans overflow-hidden">
-                        <div className="w-full py-4">
-                            <div className="bg-white shadow-md">
-                                <table className="min-w-max w-full table-auto">
-                                    <thead>
-                                        <tr className="bg-slate-300 text-slate-600 uppercase text-sm leading-normal">
-                                            {columns?.map((column) => (
-                                                <th className={`p-3 text-left ${column.sortable ? 'cursor-pointer' : ''}`} key={column.header} onClick={(e) => handleSort(e, column)}>
-                                                    {column.sortable && column.key === sortColumn && (
-                                                        <span className="inline-block float-left">
-                                                            {sortOrder === SORT_ASC ? (
-                                                                <FcAlphabeticalSortingAz className="w-5 h-5" />
-                                                            ) : (
-                                                                <FcAlphabeticalSortingZa className="w-5 h-5" />
-                                                            )}
-                                                        </span>
+            <div className="flex items-center font-sans overflow-hidden">
+                <div className="w-full py-4">
+                    <div className="bg-white shadow-md">
+                        <table className="min-w-max w-full table-auto">
+                            <thead>
+                                <tr className="bg-slate-300 text-slate-600 uppercase text-sm leading-normal">
+                                    {columns?.map((column) => (
+                                        <th className={`p-3 text-left ${column.sortable ? 'cursor-pointer' : ''}`} key={column.header} onClick={(e) => handleSort(e, column)}>
+                                            {column.sortable && column.key === sortColumn && (
+                                                <span className="inline-block float-left">
+                                                    {sortOrder === SORT_ASC ? (
+                                                        <FcAlphabeticalSortingAz className="w-5 h-5" />
+                                                    ) : (
+                                                        <FcAlphabeticalSortingZa className="w-5 h-5" />
                                                     )}
-                                                    <span className="pl-2">
-                                                        {column.header.toUpperCase().replace("_", " ")}
-                                                    </span>
-                                                </th>
-                                            ))}
-                                        </tr>
-                                    </thead>
+                                                </span>
+                                            )}
+                                            <span className="pl-2">
+                                                {column.header.toUpperCase().replace("_", " ")}
+                                            </span>
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
 
-                                    <tbody className="text-gray-600 text-sm font-light">
-                                        <TableRows
+                            <tbody className="text-gray-600 text-sm font-light">
+                            {
+                                data?.length > 0 ?
+                                data?.map((dt, i) => (
+                                    <TableRows
+                                        key={i+1}
+                                        index={i+1}
                                         fetchUrl={fetchUrl}
-                                        data={data}
+                                        data={dt}
                                         columns={columns}
                                         actions={actions}
                                         refetchData={() => fetchData()}
-                                        />
-                                    </tbody>
-
-                                </table>
-                            </div>
-                            {
-                                data?.length > 0 &&
-                                (<Paginator pagination={pagination} pageChanged={(page) => setCurrentPage(page)} />)
+                                    />
+                                ))
+                                :
+                                (
+                                    <tr className="h-16 text-lg font-medium text-center text-slate-100 bg-slate-500 drop-shadow-lg">
+                                        <td colSpan={columns.length}>No Items Found.</td>
+                                    </tr>
+                                )
                             }
-                        </div>
+                            </tbody>
+
+                        </table>
                     </div>
+                    {data?.length > 0 &&
+                        (<Paginator pagination={pagination} pageChanged={(page) => setCurrentPage(page)} />)
+                    }
                 </div>
+            </div>
+        </div>
 
     </div>
   )

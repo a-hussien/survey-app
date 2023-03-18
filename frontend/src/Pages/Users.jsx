@@ -34,9 +34,10 @@ const Users = () => {
     },
     {
         header: 'Status',
-        key: 'isActive',
+        key: 'status',
         sortable: false,
-        hasData: false,
+        hasData: true,
+        colored: true,
     },
     {
         header: 'Actions',
