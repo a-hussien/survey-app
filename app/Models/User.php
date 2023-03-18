@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserStatusEnum;
 use App\Traits\Searchable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -22,10 +23,6 @@ class User extends Authenticatable
         'name',
         'email',
     ];
-
-    /* TODO:
-        Enum Class for IsActive attribute
-    */
 
     /**
      * The attributes that are mass assignable.
@@ -56,5 +53,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'isActive' => UserStatusEnum::class,    // Enum Class for isActive attribute
     ];
 }
