@@ -5,6 +5,7 @@ import PageComponent from "../Components/PageComponent"
 import { AiOutlineUserAdd, AiOutlineUserSwitch } from "react-icons/ai"
 import toast from "react-hot-toast"
 import { Block } from "notiflix/build/notiflix-block-aio"
+import { Loading } from "notiflix/build/notiflix-loading-aio"
 
 const UserForm = () => {
 
@@ -32,11 +33,10 @@ const UserForm = () => {
     const getUser = async () => {
         await axiosClient.get(`/users/${uuid}`)
         .then(({data}) => {
-            Block.remove('.user__form')
             setUser(data?.user?.attributes)
             setTitle(`Update: ${data?.user?.attributes.name}`)
         })
-        .catch(() => {
+        .finally(() => {
             Block.remove('.user__form')
         })
     }
@@ -44,6 +44,7 @@ const UserForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         setError({__html: ''})
+        Loading.standard()
 
         if(user?.uuid) {
             // update user
@@ -59,6 +60,9 @@ const UserForm = () => {
                     setError({__html: responseErrors.join('<br />')})
                 }
             })
+            .finally(() => {
+                Loading.remove()
+            })
         }else {
             // create user
             axiosClient.post('/users', user)
@@ -72,6 +76,9 @@ const UserForm = () => {
                         (accum, next) => [...accum, ...next], [])
                     setError({__html: responseErrors.join('<br />')})
                 }
+            })
+            .finally(() => {
+                Loading.remove()
             })
         }
     }

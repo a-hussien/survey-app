@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import axiosClient from '../api/axios'
 import { useStateContext } from '../Contexts/ContextProvider'
+import { Loading } from "notiflix/build/notiflix-loading-aio"
 
 const Signin = () => {
 
@@ -11,10 +12,10 @@ const Signin = () => {
     const { register, handleSubmit } = useForm()
     const [error, setError] = useState({__html: ''})
 
-    const onLogin = ({...data}) => {
+    const onLogin = async ({...data}) => {
         setError({__html: ''})
-
-        axiosClient.post('/login', {...data})
+        Loading.standard()
+        await axiosClient.post('/login', {...data})
         .then(({response, data}) => {
             if(response?.status === 401) {
                 setError({__html: response.data.error})
@@ -30,6 +31,9 @@ const Signin = () => {
 
                 setError({__html: responseErrors.join('<br />')})
             }
+        })
+        .finally(() => {
+            Loading.remove()
         })
     }
 
