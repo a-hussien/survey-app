@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import axiosClient from '../api/axios'
 import { useStateContext } from '../Contexts/ContextProvider'
+import { Loading } from "notiflix/build/notiflix-loading-aio"
 
 const Signup = () => {
 
@@ -13,11 +14,10 @@ const Signup = () => {
 
     const [error, setError] = useState({__html: ''})
 
-    const onSave = ({...data}) => {
-
+    const onSave = async ({...data}) => {
         setError({__html: ''})
-        // handle incoming request via axios
-        axiosClient.post('/register', {...data})
+        Loading.standard()
+        await axiosClient.post('/register', {...data})
         .then(({data}) => {
             setAuthUser(data?.user?.attributes)
             setUserToken(data?.token)
@@ -29,6 +29,9 @@ const Signup = () => {
 
                 setError({__html: responseErrors.join('<br />')})
             }
+        })
+        .finally(() => {
+            Loading.remove()
         })
     }
 
