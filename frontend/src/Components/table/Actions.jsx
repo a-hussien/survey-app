@@ -18,6 +18,8 @@ const Actions = ({...props}) => {
                 await axiosClient.delete(`${url}/${data.uuid}`)
                 .then(() => {
                     toast.success('Item deleted!')
+                })
+                .finally(() => {
                     refetchData()
                 })
             },
@@ -36,10 +38,11 @@ const Actions = ({...props}) => {
     <div className="flex item-center justify-center">
         {
             actions.map((action) => (
-            <div key={action.name} className="w-4 mr-2 transform hover:scale-110 cursor-pointer">
+            <div key={action.name} className="w-4 mr-2 transform hover:scale-110 transition-transform duration-200 cursor-pointer">
                 {
-                    action.hasLink ? (
-                        <Link to={`/users/${data.uuid}`}>
+                    action.hasLink ?
+                    (
+                        <Link to={`${url}/${data.uuid}`}>
                             {action.icon}
                         </Link>
                     ):(

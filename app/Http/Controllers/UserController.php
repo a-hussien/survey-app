@@ -15,7 +15,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class UserController extends Controller
 {
     /**
-     * UsersController constructor.
+     * UserController constructor.
      *
      * @param User $user
      */
