@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Role;
 use App\Models\User;
+use App\Observers\RoleObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
@@ -29,6 +31,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $observers = [
         User::class => [UserObserver::class],
+        Role::class => [RoleObserver::class],
     ];
 
     /**
