@@ -29,7 +29,7 @@ class UserController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         return UserResource::collection(
-            $this->user->search($request->query('search', ''))
+            $this->user->with('roles')->search($request->query('search', ''))
             ->orderBy($request->sort_field, $request->sort_order)
             ->paginate((int) $request->query('per_page')));
     }

@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom"
 import Dashboard from './Pages/Dashboard'
-import Surveys from './Pages/Surveys'
+import Roles from './Pages/Roles'
 import Signin from './Pages/Signin'
 import Signup from './Pages/Signup'
 import Users from "./Pages/Users"
@@ -36,8 +36,8 @@ const router = createBrowserRouter([
                 element: <UserForm key="EditUser" />
             },
             {
-                path: '/surveys',
-                element: <Surveys />
+                path: '/roles',
+                element: <Roles />
             },
         ]
     },
