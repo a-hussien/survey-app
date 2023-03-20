@@ -1,13 +1,13 @@
 import PageComponent from "../Components/PageComponent"
 
-const Surveys = () => {
+const Roles = () => {
   return (
-    <PageComponent title="Surveys">
+    <PageComponent title="Roles">
         <div>
-            Surveys Content
+            Roles Content
         </div>
     </PageComponent>
   )
 }
 
-export default Surveys
+export default Roles

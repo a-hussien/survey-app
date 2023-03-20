@@ -9,7 +9,7 @@ import LogoImg from './LogoImg'
 const navigation = [
     { name: 'Dashboard', to: '/' },
     { name: 'Users', to: '/users' },
-    { name: 'Surveys', to: '/surveys' },
+    { name: 'Roles & Permissions', to: '/roles' },
 ]
 
 function classNames(...classes) {
@@ -26,9 +26,9 @@ const NavBar = () => {
         })
     }, [])
 
-    const Logout = (e) => {
+    const Logout = async (e) => {
         e.preventDefault()
-        axiosClient.post('/logout').then( () => {
+        await axiosClient.post('/logout').then( () => {
             setAuthUser({})
             setUserToken('')
         })

@@ -58,7 +58,9 @@ const DataTable = ({...props}) => {
     }
 
     const fetchData = async () => {
-        Block.circle('.data__table')
+        Block.circle('.data__table', 'Please Wait', {
+            querySelectorLimit: 1,
+        })
         const params = {
             search,
             sort_field: sortColumn,
@@ -100,8 +102,8 @@ const DataTable = ({...props}) => {
             </div>
         </div>
 
-        <div className="overflow-x-auto data__table">
-            <div className="flex items-center font-sans overflow-hidden">
+        <div className="overflow-x-auto">
+            <div className="data__table flex items-center font-sans overflow-hidden">
                 <div className="w-full py-4">
                     <div className="bg-white shadow-md">
                         <table className="min-w-max w-full table-auto">

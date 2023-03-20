@@ -20,7 +20,10 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        //
+        if($user->id !== 1)
+        {
+           $user->assignRole('normal-user');
+        }
     }
 
     /**
